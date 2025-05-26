@@ -25,10 +25,11 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 300px;
-      height: 400px;
+      width: 100%;
+      height: 100%;
       opacity: 0;
-      transition: opacity 2s ease-in-out;
+      transition: opacity 1s ease-in-out;
+      object-fit: cover; /* Para imagens não distorcerem */
       border-radius: 20px;
     }
 
@@ -64,22 +65,36 @@
 
     #playButton {
       margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #d63384;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #ff6b6b, #d63384);
       color: white;
       border: none;
-      border-radius: 20px;
-      font-size: 1rem;
+      border-radius: 30px;
+      font-size: 1.1rem;
       cursor: pointer;
+      box-shadow: 0 4px 8px rgba(214, 51, 132, 0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     #playButton:hover {
-      background-color: #c2185b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(214, 51, 132, 0.4);
+    }
+
+    @media (max-width: 600px) {
+      #slideshow {
+        width: 90vw;
+        height: 70vh;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Oi, meu amor 💕</h1>
+  <h1>Oi, minah vidoquinha 💕</h1>
   <p>Estamos juntos há:</p>
   <p id="contador"></p>
 
@@ -97,16 +112,20 @@
     <!-- Adicione mais imagens aqui -->
   </div>
 
-  <p style="margin-top: 30px;">Te amo muito! 💖</p>
+  <p style="margin-top: 30px;">Eu te amo demaaaaaaais 💖</p>
 
   <!-- Botão para tocar a música -->
-  <button id="playButton">Tocar nossa música 🎵</button>
+  <button id="playButton">Play 🎵</button>
 
-  <audio id="musica" loop>
-    <source src="musica.mp3" type="audio/mpeg">
-    Seu navegador não suporta áudio 😢
-  </audio>
-
+  <iframe 
+    id="youtubeAudio" 
+    width="0" 
+    height="0" 
+    src="https://www.youtube.com/embed/WeGvzxpr1ZY?enablejsapi=1&start=1" 
+    frameborder="0" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    style="display:none"
+  ></iframe>
   <!-- Script do contador -->
   <script>
     const dataInicio = new Date("2025-01-26T11:30:00"); // troque pela data de vocês
@@ -127,23 +146,47 @@
 
   <!-- Script da música -->
   <script>
-    const musica = document.getElementById("musica");
-    const playButton = document.getElementById("playButton");
 
-    playButton.addEventListener("click", () => {
-      musica.play();
-      playButton.style.display = "none"; // esconde o botão depois que tocar
-    });
+        // Carrega a API do YouTube
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('youtubeAudio', {
+        events: {
+          'onReady': onPlayerReady
+        }
+      });
+    }
+
+    function onPlayerReady() {
+      const playButton = document.getElementById('playButton');
+      
+      playButton.addEventListener('click', () => {
+        if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+          player.pauseVideo();
+          playButton.textContent = "Play 🎵";
+        } else {
+          player.playVideo();
+          playButton.textContent = "Pause ⏸";
+        }
+      });
+    }
+    
   </script>
 
   <!-- Script dos corações -->
   <script>
+    const emojis = ["💖", "🌸", "💘", "🥰", "😍"]; // Lista de emojis
+
     function criarCoracao() {
       const coracao = document.createElement('div');
       coracao.classList.add('heart');
       coracao.style.left = Math.random() * 100 + "vw";
       coracao.style.fontSize = (Math.random() * 20 + 10) + "px";
-      coracao.textContent = "💖";
+      coracao.textContent = emojis[Math.floor(Math.random() * emojis.length)]; // Escolhe um emoji aleatório
       document.body.appendChild(coracao);
       setTimeout(() => coracao.remove(), 5000);
     }
