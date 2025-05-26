@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Nosso Amor 💖</title>
@@ -62,30 +63,41 @@
       }
     }
 
-    #playButton {
-      margin-top: 20px;
-      padding: 12px 25px;
-      background: linear-gradient(45deg, #ff6b6b, #d63384);
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 4px 8px rgba(214, 51, 132, 0.3);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
+    .music-container {
+    margin: 30px auto;
+    text-align: center;
+  }
 
-    #playButton:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(214, 51, 132, 0.4);
-    }
+  #playButton {
+    background: linear-gradient(45deg, #ff6b6b, #d63384);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(214, 51, 132, 0.3);
+    transition: transform 0.3s;
+    font-weight: bold;
+  }
 
+  #playButton:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(45deg, #d63384, #ff6b6b);
+  }
+
+  .heart-message {
+    font-style: italic;
+    color: #d63384;
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }
     
   </style>
 </head>
 <body>
-  <h1>Oi, minah vidoquinha 💕</h1>
-  <p>Estamos juntos há:</p>
+  <h1>Oi, minha vidoquinha 💕</h1>
+  <p>O Tempo passa voando heinn. Estamos juntos há:</p>
   <p id="contador"></p>
 
   <!-- Slideshow testando -->
@@ -104,18 +116,19 @@
 
   <p style="margin-top: 30px;">Eu te amo demaaaaaaais 💖</p>
 
-  <!-- Botão para tocar a música -->
-  <button id="playButton">Play 🎵</button>
-
+  <div class="music-container">
+    <button id="playButton">Tocar</button>
+    <p class="heart-message">(Igual como você tocou meu coração ❤️)</p>
+  </div>
   <iframe 
-    id="youtubeAudio" 
+    id="scPlayer" 
     width="0" 
     height="0" 
-    src="https://www.youtube.com/embed/WeGvzxpr1ZY?enablejsapi=1&start=1" 
-    frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-    style="display:none"
-  ></iframe>
+    scrolling="no" 
+    frameborder="no" 
+    allow="autoplay" 
+    src="https://w.soundcloud.com/player/?url=https://soundcloud.com/zwesley-pvp/tim-maia-eu-amo-voce-slowed&color=%23ff6b6b&auto_play=false&hide_related=true&show_comments=false">
+  </iframe>
   <!-- Script do contador -->
   <script>
     const dataInicio = new Date("2025-01-26T11:30:00"); // troque pela data de vocês
@@ -136,35 +149,20 @@
 
   <!-- Script da música -->
   <script>
-
-        // Carrega a API do YouTube
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(tag);
-
+// Configura o player do SoundCloud
+    const playButton = document.getElementById("playButton");
     let player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('youtubeAudio', {
-        events: {
-          'onReady': onPlayerReady
-        }
-      });
-    }
 
-    function onPlayerReady() {
-      const playButton = document.getElementById('playButton');
+    window.addEventListener("load", () => {
+      player = SC.Widget("scPlayer");
       
-      playButton.addEventListener('click', () => {
-        if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-          player.pauseVideo();
-          playButton.textContent = "Play 🎵";
-        } else {
-          player.playVideo();
-          playButton.textContent = "Pause ⏸";
-        }
+      playButton.addEventListener("click", () => {
+        player.toggle(); // Play/pause
+        player.isPlaying((isPlaying) => {
+          playButton.textContent = isPlaying ? "Pause ⏸" : "Play 🎵";
+        });
       });
-    }
-    
+    });
   </script>
 
   <!-- Script dos corações -->
